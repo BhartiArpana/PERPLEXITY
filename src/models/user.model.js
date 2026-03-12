@@ -15,8 +15,9 @@ const userSchema = new mongoose.Schema({
         required:[true,'password required for register'],
         Select:false
     },
-    success:{
-        type:Boolean
+    verified:{
+        type:Boolean,
+        default:false
     },
     
 },{
