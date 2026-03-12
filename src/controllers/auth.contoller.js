@@ -90,6 +90,23 @@ export async function login(req,res){
 
 }
 
+export async function getMe(req,res){
+    const user = await userModel.findById(req.user.id)
+    if(!user){
+        return res.status(404).json({
+            message:'user not found',
+            success:false,
+            err:'user not found'
+        })
+    }   
+    res.status(200).json({
+        message:'user fetched successfully',
+        success:true,
+        user
+    })
+
+}
+
 export async function verifyEmail(req,res){
     const {token}= req.query
 

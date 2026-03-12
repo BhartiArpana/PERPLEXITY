@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         required:[true,'password required for register'],
-        Select:false
+        select:false
     },
     verified:{
         type:Boolean,
