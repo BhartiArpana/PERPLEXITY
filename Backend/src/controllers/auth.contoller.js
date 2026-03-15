@@ -43,7 +43,7 @@ const hash = await bcrypt.hash(password,10)
     })
 
     res.status(201).json({
-        message:'user regiser successfully',
+        message:'user registered successfully',
         success:true,
         user
     })
@@ -52,7 +52,7 @@ const hash = await bcrypt.hash(password,10)
 
 export async function login(req,res){
     const {email,password} = req.body
-    const user = await userModel.findOne({email})
+    const user = await userModel.findOne({email}).select("+password")
     if(!user){
         return res.status(400).json({
             message:'invalid email or password',
