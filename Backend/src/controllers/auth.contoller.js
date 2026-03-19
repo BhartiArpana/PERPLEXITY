@@ -26,7 +26,9 @@ const hash = await bcrypt.hash(password,10)
     })
 
     const mainVerificationToken = jwt.sign({
-        email:user.email
+        email:user.email,
+        id:user._id,
+        username:user.username
     },process.env.JWT_SECRET)
 
     await sendEmail({
@@ -77,7 +79,8 @@ export async function login(req,res){
     }   
     const token = jwt.sign({
         email:user.email,
-        id:user._id
+        id:user._id,
+        username:user.name
     },process.env.JWT_SECRET)
 
     res.cookie('token',token)
