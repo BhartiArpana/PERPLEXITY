@@ -7,6 +7,8 @@ apikey:process.env.MISTRAL_API_KEY
 });
 
 export async function generateResponse(messages){
+    console.log(messages);
+    
     const response = model.invoke(messages.map((msg)=>{
         if(msg.role == 'user'){
             return new HumanMessage(msg.content)

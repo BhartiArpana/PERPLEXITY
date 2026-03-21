@@ -3,7 +3,7 @@ import chatModel from "../models/chat.model.js"
 import messageModel from '../models/message.model.js'
 import { response } from "express"
 
-export async function createChat(req,res){
+export async function sendMessage(req,res){
      const {message,chatId} = req.body
     const user = req.user
     
@@ -16,14 +16,12 @@ export async function createChat(req,res){
      })
      }
 
-         
-     const messages = await messageModel.find({chatId:chatId})
-
      const userMessage = await messageModel.create({
          chatId:chatId|| chat._id,
          role:"user",
          content:message
      })
+      const messages = await messageModel.find({chatId:chatId || chat._id})
 
        const result = await generateResponse(messages)
 
@@ -36,8 +34,9 @@ export async function createChat(req,res){
 
 
      res.status(200).json({
-       user:message,
-       ai:result
+        title:title,
+        chat:chat,
+       aiMessage:aiMessage
      })
 }
 

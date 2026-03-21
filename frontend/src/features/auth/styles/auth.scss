@@ -34,28 +34,28 @@
 .auth-card input{
   padding:12px;
   border-radius:8px;
-  border:1px solid #334155;
+  border:1px solid #1d4ed8;
   background:#020817;
   color:white;
   outline:none;
 }
 
 .auth-card input:focus{
-  border-color:#22c55e;
+  border-color:#1d4ed8;
 }
 
 .auth-card button{
   padding:12px;
   border:none;
   border-radius:8px;
-  background:#16a34a;
+  background:#1d4ed8;
   color:white;
   font-weight:600;
   cursor:pointer;
 }
 
 .auth-card button:hover{
-  background:#15803d;
+  background:#1d4ed8;
 }
 
 .auth-card span{
@@ -65,6 +65,6 @@
 }
 
 .auth-card a{
-  color:#22c55e;
+  color:#1d4ed8;
   text-decoration:none;
 }
