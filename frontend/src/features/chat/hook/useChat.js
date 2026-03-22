@@ -32,6 +32,7 @@ export const useChat = ()=>{
         role:aiMessage.role
       }))
       dispatch(setCurrentChatId(chat._id))
+        dispatch(setIsLoading(false))
     }
 
     async function handleGetChats(){
@@ -45,6 +46,7 @@ export const useChat = ()=>{
                 message:[],
                 lastUpdate:chat.updatedAt,
             }
+            dispatch(setIsLoading(false))
             return acc
         },{})))
     }

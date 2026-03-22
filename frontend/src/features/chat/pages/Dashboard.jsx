@@ -10,6 +10,9 @@ const Dashboard = () => {
 
   const chats = useSelector((state) => state.chat.chats);
   const currentChatId = useSelector((state) => state.chat.currentChatId);
+  const isLoading = useSelector((state) => state.chat.isLoading);
+  const [aiThinking, setAiThinking] = useState(false);
+
   console.log('chat :' + chats._id);
   console.log('currentChatId : ',+currentChatId);
   
@@ -20,17 +23,18 @@ const Dashboard = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  const handleSend = () => {
+  const handleSend = async() => {
     if (!input.trim()) return;
 
     setMessages((prev) => [...prev, { type: "user", text: input }]);
     setInput("");
-    setTimeout(() => {
+  
       setMessages((prev) => [...prev, { type: "ai", text: "" }]);
-    }, 500);
-
-    handleSendMessage({ message: input.trim(), chatId: currentChatId });
+   
+  
+    await handleSendMessage({ message: input.trim(), chatId: currentChatId });
     setInput("");
+    
   };
 //   console.log("chats:", chats);
 // console.log("keys:", Object.keys(chats));
@@ -119,6 +123,11 @@ const Dashboard = () => {
               </div>
             ))
           )}
+             {isLoading && (
+    <div className="message ai thinking">
+      <em>Thinking...</em>
+    </div>
+  )}
         </div>
 
         {/* Input */}
