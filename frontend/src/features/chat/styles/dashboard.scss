@@ -3,6 +3,7 @@
   height: 100vh;
   background: #0b0f19;
   color: #e5e7eb;
+  overflow: hidden;
 
 
   /* SIDEBAR */
@@ -128,6 +129,7 @@
         display: flex;
         flex-direction: column;
         gap: 0.25rem;
+        
 
         .chat-item {
           padding: 0.6rem 0.75rem;
@@ -137,6 +139,9 @@
           color: #d1d5db;
 
           &:hover {
+            background: #111828;
+          }
+          &:active{
             background: #111828;
           }
         }
@@ -176,17 +181,23 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    max-width: 60%; // 900px
+    max-width: 70%; // 900px
     margin: 0 auto;
+   
     
    
   }
-
+  
   /* MESSAGES */
   .messages {
     flex: 1;
     overflow-y: auto;
     padding: 1.25rem 1.25rem;
+    &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;      
+  -ms-overflow-style: none;  
 
     .empty-state {
       text-align: center;
@@ -205,20 +216,21 @@
     .message {
       max-width: 43.75rem; // 700px
       margin: 0.625rem auto;
-      padding: 0.5rem 1rem;
+      padding: 0.5rem ;
       border-radius: 0.625rem;
       line-height: 1.5;
 
       &.user {
-        background: #1d4ed8;
+        background: #111828;
         color: white;
-        margin-right: 2rem;
+        margin-right: 0.3rem;
         width: fit-content;
+        border: 0.0625rem solid #1f2937;
       }
 
       &.ai {
-        background: #111828;
-        border: 0.0625rem solid #1f2937;
+        
+        
         width: fit-content;
         margin-left: 0rem;
       }

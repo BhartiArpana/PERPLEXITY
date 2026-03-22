@@ -44,7 +44,8 @@ const Dashboard = () => {
   }, []);
 
   function openChat(chatId){
-     handleOpenChat(chatId)
+    console.log("chat"+chats)
+     handleOpenChat(chatId,chats)
   }
 
   return (
