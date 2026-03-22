@@ -8,7 +8,7 @@ import mongoose from "mongoose";
     },
     role:{
         type:String,
-        enum:['Ai','user'],
+        enum:['ai','user'],
         required:true
         },
     content:String

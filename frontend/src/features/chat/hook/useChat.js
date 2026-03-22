@@ -10,7 +10,7 @@ export const useChat = ()=>{
     async function handleSendMessage({message,chatId}){
       dispatch(setIsLoading(true))
       const data = await sendMessage({message,chatId})
-   if (!data || !data.chat) {
+   if (!data || !data.aiMessage) {
         console.error("Backend se sahi data nahi aaya:", data);
         return;
       }
@@ -68,6 +68,8 @@ export const useChat = ()=>{
       
       dispatch(setCurrentChatId(chatId))
     }
+
+    
 
     return {
         initializeSocketConnection,
