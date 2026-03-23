@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useChat } from "../hook/useChat";
 import "../styles/dashboard.scss";
 import ReactMarkdown from 'react-markdown';
+import { useAuth } from "../../auth/hook/useAuth";
 
 const Dashboard = () => {
   
@@ -12,6 +13,8 @@ const Dashboard = () => {
   const currentChatId = useSelector((state) => state.chat.currentChatId);
   const isLoading = useSelector((state) => state.chat.isLoading);
   const [aiThinking, setAiThinking] = useState(false);
+  const {handleGetMe}  = useAuth()
+  const [user, etUser] = useState(false);
 
   console.log('chat :' + chats._id);
   console.log('currentChatId : ',+currentChatId);
@@ -43,7 +46,8 @@ const Dashboard = () => {
   useEffect(() => {
     initializeSocketConnection();
     handleGetChats()
-    console.log(handleGetChats());
+    // console.log(handleGetChats());
+    
     
   }, []);
 
@@ -98,7 +102,7 @@ const Dashboard = () => {
 
         <div className="sidebar-bottom">
           <div className="avatar">A</div>
-          <span className="username">Arpana</span>
+          <span className="username">{}</span>
         </div>
       </div>
 

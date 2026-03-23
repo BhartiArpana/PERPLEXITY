@@ -1,11 +1,30 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/auth.scss";
+import {useAuth} from '../hook/useAuth'
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const {handleRegister} = useAuth()
+  const navigate = useNavigate()
+  const user = useSelector((state)=>state.auth.user)
+
+  async function handleSubmit(e){
+    e.preventDefault()
+
+ const res = await handleRegister(name,email,password)
+   navigate('/login')
+   
+   if(res.success){
+    alert('We’ve sent a verification link to your email. Please verify your account before logging in.')
+   }
+   
+  }
 
   return (
     <div className="auth-container">
@@ -13,8 +32,8 @@ const Register = () => {
         <h1>Register</h1>
         <p>Create your account</p>
 
-        <form>
-          <form autoComplete="off">
+        <form onSubmit={(e)=>handleSubmit(e)}>
+       
             <input
               type="text"
               placeholder="Full Name"
@@ -38,7 +57,7 @@ const Register = () => {
               autoComplete="new-password"
               onChange={(e) => setPassword(e.target.value)}
             />
-          </form>
+         
           <button>Register</button>
         </form>
 
