@@ -4,6 +4,7 @@ import { useChat } from "../hook/useChat";
 import "../styles/dashboard.scss";
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from "../../auth/hook/useAuth";
+import { CgProfile } from "react-icons/cg";
 
 const Dashboard = () => {
   
@@ -50,6 +51,15 @@ const Dashboard = () => {
     
     
   }, []);
+  const handleNewChat = () => {
+  
+ 
+  handleOpenChat(null, chats); 
+  
+ 
+  setMessages([]); 
+  setInput("");
+};
 
   function openChat(chatId){
     console.log("chat"+chats)
@@ -74,7 +84,7 @@ const Dashboard = () => {
 
         <div className="sidebar-middle">
           {/* New Chat */}
-          <div className="new-chat">
+          <div className="new-chat" onClick={handleNewChat}>
             <span className="icon">+</span>
             <span>New Chat</span>
           </div>
@@ -101,8 +111,8 @@ const Dashboard = () => {
         </div>
 
         <div className="sidebar-bottom">
-          <div className="avatar">A</div>
-          <span className="username">{}</span>
+          <div className="avatar"><CgProfile /></div>
+          <span className="username">User</span>
         </div>
       </div>
 
