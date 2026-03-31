@@ -13,9 +13,11 @@ app.use(cookieParser())
 app.use(morgan('dev'))
 app.use(cors(
     {
-        origin:'http://localhost:5173',
+        origin:['https://perplexity-gy2x.vercel.app',
+            'http://localhost:3000'
+        ],
     credentials:true,
-    methods:['get','post','delete','patch']
+    methods: ['GET', 'POST', 'DELETE', 'PATCH']
     }
 ))
 
