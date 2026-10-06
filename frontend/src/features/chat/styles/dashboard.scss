@@ -58,7 +58,8 @@ $font-body: "Lora", Georgia, serif;
       .sidebar-bottom {
         justify-content: center;
 
-        .username {
+        .username,
+        .logout-btn {
           display: none;
         }
       }
@@ -200,6 +201,24 @@ $font-body: "Lora", Georgia, serif;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+
+      .logout-btn {
+        margin-left: auto;
+        background: none;
+        border: none;
+        color: $muted;
+        font-size: 1.15rem;
+        cursor: pointer;
+        display: flex;
+        padding: 0.4rem;
+        border-radius: 0.4rem;
+        transition: color 0.2s, background 0.2s;
+
+        &:hover {
+          color: #f87171;
+          background: rgba(255, 255, 255, 0.06);
+        }
       }
     }
   }
@@ -454,6 +473,7 @@ $font-body: "Lora", Georgia, serif;
   }
 }
 
+// ---------- MOBILE ----------
 .dashboard {
   height: 100dvh;
 
@@ -505,16 +525,34 @@ $font-body: "Lora", Georgia, serif;
 
         .sidebar-top {
           justify-content: space-between;
-          .logo { display: inline; }
+
+          .logo {
+            display: inline;
+          }
         }
+
         .new-chat {
           justify-content: flex-start;
-          .label { display: inline; }
+
+          .label {
+            display: inline;
+          }
         }
-        .chat-history { display: flex; }
+
+        .chat-history {
+          display: flex;
+        }
+
         .sidebar-bottom {
           justify-content: flex-start;
-          .username { display: inline; }
+
+          .username {
+            display: inline;
+          }
+
+          .logout-btn {
+            display: flex;
+          }
         }
       }
     }
@@ -538,10 +576,15 @@ $font-body: "Lora", Georgia, serif;
 
       .empty-state {
         margin-top: 4rem;
-        h2 { font-size: 2rem; }
+
+        h2 {
+          font-size: 2rem;
+        }
       }
 
-      .message.user { max-width: 85%; }
+      .message.user {
+        max-width: 85%;
+      }
     }
 
     .chat-input {

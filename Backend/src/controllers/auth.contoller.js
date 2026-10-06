@@ -2,6 +2,7 @@ import { userModel } from "../models/user.model.js";
 import { sendEmail } from "../services/mail.service.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import blacklistModel from "../models/blacklist.model.js";
 
 export async function register(req,res){
     const {name, email, password} = req.body
@@ -38,7 +39,7 @@ const hash = await bcrypt.hash(password,10)
         <P>hi ${name} </p>
        <p>Thank you for registering at <strong>Perplexity</strong>. We're excited to have you on board!</p> 
        <p>To get started, please verify your email address by clicking the link below:</p>
-       <a href="http://localhost:3000/api/auth/verify-email?token=${mainVerificationToken}">Verify Email</a>
+       <a href="${process.env.BACKEND_URL}/api/auth/verify-email?token=${mainVerificationToken}">Verify Email</a>
        <p>If you did not create an account, please ignore this email.</p> 
        <p>Best regards,<br>The Perplexity Team</p>
        `
@@ -131,7 +132,32 @@ export async function verifyEmail(req,res){
     const html = `
         <h1>Email verified successfully</h1>
         <p>Your email has been verified. you can now login in your account</p>
-        <a href="http://localhost:3000/api/authlogin">Go to login</a>
+        <a href="${process.env.FRONTEND_URL}/login">Go to login</a>
     `
     res.send(html)
+}
+
+export const logout = async(req,res)=>{
+  const token = req.cookies.token
+  if(!token){
+    return res.status(400).json({
+      message:'Token not provided'
+    })  
+  }
+
+  const isTokenBlacklisted = await blacklistModel.findOne({ token });
+  if (isTokenBlacklisted) {
+    return res.status(400).json({
+      message: 'Invalid token',
+    });
+  }
+
+  const blacklistToken = new blacklistModel({ token });
+  await blacklistToken.save();
+
+  res.clearCookie('token');
+  res.status(200).json({
+    message: 'User logged out successfully',
+  });
+
 }

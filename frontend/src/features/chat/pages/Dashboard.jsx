@@ -4,8 +4,10 @@ import { useChat } from "../hook/useChat";
 import "../styles/dashboard.scss";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "../../auth/hook/useAuth";
-import { FiTrash2 } from "react-icons/fi";
 import { useRef } from "react";
+import { FiTrash2, FiLogOut } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+
 
 const Dashboard = () => {
   const {
@@ -15,7 +17,9 @@ const Dashboard = () => {
     handleOpenChat,
     handleDeleteChat,
   } = useChat();
-  const { handleGetMe } = useAuth();
+  const { handleGetMe,handleLogout  } = useAuth();
+
+  const navigate = useNavigate();
 
   const chats = useSelector((state) => state.chat.chats);
   const currentChatId = useSelector((state) => state.chat.currentChatId);
@@ -41,6 +45,12 @@ const Dashboard = () => {
       setUser(data?.user || null);
     };
   }, []);
+
+  const onLogout = async () => {
+  await handleLogout();
+  await handleGetMe()
+  navigate("/login");
+};
 
   const closeOnMobile = () => {
     if (window.innerWidth <= 768) setIsSidebarOpen(false);
@@ -86,7 +96,7 @@ const Dashboard = () => {
   // TASK 4: delete + sidebar se turant hatao
   const onDelete = async () => {
     const chatId = menu.chatId;
-    console.log("Deleting chat with ID:", chatId);
+    // console.log("Deleting chat with ID:", chatId);
     setMenu(null);
     try {
       await handleDeleteChat(chatId);
@@ -95,7 +105,7 @@ const Dashboard = () => {
         handleOpenChat(null, chats); // open chat delete hui to blank screen
       }
     } catch (err) {
-      console.log("delete error:", err);
+      // console.log("delete error:", err);
     }
   };
 
@@ -168,6 +178,9 @@ const Dashboard = () => {
         <div className="sidebar-bottom">
           <div className="avatar">{initial}</div>
           <span className="username">{userName}</span>
+          <button className="logout-btn" onClick={onLogout} title="Logout">
+    <FiLogOut />
+  </button>
         </div>
       </div>
 

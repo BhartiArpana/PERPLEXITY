@@ -11,7 +11,7 @@ export const useChat = ()=>{
       dispatch(setIsLoading(true))
       const data = await sendMessage({message,chatId})
    if (!data || !data.aiMessage) {
-        console.error("Backend se sahi data nahi aaya:", data);
+        // console.error("Backend se sahi data nahi aaya:", data);
         return;
       }
       
@@ -52,7 +52,7 @@ export const useChat = ()=>{
     }
 
     async function handleOpenChat(chatId,chats){
-      console.log('undefined: '+chats[chatId]?.message.length )
+      // console.log('undefined: '+chats[chatId]?.message.length )
       if(chats[chatId]?.message.length === 0)
       {
         const data = await getMessage(chatId)
