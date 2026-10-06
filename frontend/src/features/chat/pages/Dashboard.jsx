@@ -2,78 +2,124 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useChat } from "../hook/useChat";
 import "../styles/dashboard.scss";
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from "react-markdown";
 import { useAuth } from "../../auth/hook/useAuth";
-import { CgProfile } from "react-icons/cg";
+import { FiTrash2 } from "react-icons/fi";
+import { useRef } from "react";
 
 const Dashboard = () => {
-  
-  const { initializeSocketConnection, handleSendMessage,handleGetChats,handleOpenChat } = useChat();
+  const {
+    initializeSocketConnection,
+    handleSendMessage,
+    handleGetChats,
+    handleOpenChat,
+    handleDeleteChat,
+  } = useChat();
+  const { handleGetMe } = useAuth();
 
   const chats = useSelector((state) => state.chat.chats);
   const currentChatId = useSelector((state) => state.chat.currentChatId);
-  const isLoading = useSelector((state) => state.chat.isLoading);
-  const [aiThinking, setAiThinking] = useState(false);
-  const {handleGetMe}  = useAuth()
-  const [user, etUser] = useState(false);
 
-  console.log('chat :' + chats._id);
-  console.log('currentChatId : ',+currentChatId);
-  
-  
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
-  const [messages, setMessages] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
   const [input, setInput] = useState("");
+  const [aiThinking, setAiThinking] = useState(false); // sirf send ke baad
+  const user = useSelector((state) => state.auth.user);
+  const [menu, setMenu] = useState(null); // { x, y, chatId }
+  const [deletedIds, setDeletedIds] = useState([]); // delete hui chats sidebar se hide
+  const pressTimer = useRef(null);
 
-  const handleSend = async() => {
-    if (!input.trim()) return;
-
-    setMessages((prev) => [...prev, { type: "user", text: input }]);
-    setInput("");
-  
-      setMessages((prev) => [...prev, { type: "ai", text: "" }]);
-   
-  
-    await handleSendMessage({ message: input.trim(), chatId: currentChatId });
-    setInput("");
-    
-  };
-//   console.log("chats:", chats);
-// console.log("keys:", Object.keys(chats));
-
+  // TASK 5: user name + first letter
+  const userName = user?.name || "User";
+  const initial = userName.charAt(0).toUpperCase();
 
   useEffect(() => {
     initializeSocketConnection();
-    handleGetChats()
-    // console.log(handleGetChats());
-    
-    
-  }, []);
-  const handleNewChat = () => {
-  
- 
-  handleOpenChat(null, chats); 
-  
- 
-  setMessages([]); 
-  setInput("");
-};
+    handleGetChats();
 
-  function openChat(chatId){
-    console.log("chat"+chats)
-     handleOpenChat(chatId,chats)
-  }
+    const loadUser = async () => {
+      const data = await handleGetMe();
+      setUser(data?.user || null);
+    };
+  }, []);
+
+  const closeOnMobile = () => {
+    if (window.innerWidth <= 768) setIsSidebarOpen(false);
+  };
+
+  // right-click menu: kahin bhi click karo to band
+  useEffect(() => {
+    const close = () => setMenu(null);
+    window.addEventListener("click", close);
+    return () => window.removeEventListener("click", close);
+  }, []);
+
+  // TASK 2: thinking sirf request ke dauraan
+  const handleSend = async () => {
+    const text = input.trim();
+    if (!text || aiThinking) return;
+
+    setInput("");
+    setAiThinking(true);
+    try {
+      await handleSendMessage({ message: text, chatId: currentChatId });
+    } finally {
+      setAiThinking(false); // response aaya ya error, dono me band
+    }
+  };
+
+  const handleNewChat = () => {
+    handleOpenChat(null, chats);
+    setInput("");
+    closeOnMobile();
+  };
+
+  const openChat = (chatId) => {
+    handleOpenChat(chatId, chats);
+  };
+
+  // TASK 3: right click
+  const openMenu = (e, chatId) => {
+    e.preventDefault();
+    setMenu({ x: e.clientX, y: e.clientY, chatId });
+  };
+
+  // TASK 4: delete + sidebar se turant hatao
+  const onDelete = async () => {
+    const chatId = menu.chatId;
+    console.log("Deleting chat with ID:", chatId);
+    setMenu(null);
+    try {
+      await handleDeleteChat(chatId);
+      setDeletedIds((prev) => [...prev, chatId]);
+      if (chatId === currentChatId) {
+        handleOpenChat(null, chats); // open chat delete hui to blank screen
+      }
+    } catch (err) {
+      console.log("delete error:", err);
+    }
+  };
+
+  const chatList = Object.values(chats || {}).filter(
+    (chat) => !deletedIds.includes(chat._id),
+  );
+
+  const currentMessages = chats?.[currentChatId]?.message || [];
 
   return (
     <div className="dashboard">
+      <div className="mobile-bar">
+        <span className="menu-btn" onClick={() => setIsSidebarOpen(true)}>
+          ☰
+        </span>
+        <span className="logo">Perplexity</span>
+      </div>
+      {isSidebarOpen && (
+        <div className="backdrop" onClick={() => setIsSidebarOpen(false)} />
+      )}
       {/* Sidebar */}
       <div className={`sidebar ${isSidebarOpen ? "" : "collapsed"}`}>
         <div className="sidebar-top">
-          <span>Perplexity</span>
-
-          {/* Collapse Icon */}
+          <span className="logo">Perplexity</span>
           <span
             className="collapse-btn"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -83,25 +129,34 @@ const Dashboard = () => {
         </div>
 
         <div className="sidebar-middle">
-          {/* New Chat */}
           <div className="new-chat" onClick={handleNewChat}>
             <span className="icon">+</span>
-            <span>New Chat</span>
+            <span className="label">New Chat</span>
           </div>
 
-          {/* Chat History */}
           <div className="chat-history">
-            <p className="heading">Chats</p>
+            <p className="heading">CHATS</p>
             <div className="chat-list">
-              {/* Object.values se object array ban jayega */}
-              {Object.values(chats || {}).map((chat, i) => (
+              {chatList.map((chat, i) => (
                 <div
-                  key={chat.id || i}
-                  className={`chat-item ${currentChatId === chat.id ? "active" : ""}`}
-                  onClick={()=>{openChat(chat._id)
-                    console.log(chat._id);
-                    
-                  }} // ID set karna zaroori hai
+                  key={chat._id || i}
+                  className={`chat-item ${currentChatId === chat._id ? "active" : ""}`}
+                  onClick={() => openChat(chat._id)}
+                  onContextMenu={(e) => openMenu(e, chat._id)}
+                  onTouchStart={(e) => {
+                    const t = e.touches[0];
+                    pressTimer.current = setTimeout(
+                      () =>
+                        setMenu({
+                          x: t.clientX,
+                          y: t.clientY,
+                          chatId: chat._id,
+                        }),
+                      600,
+                    );
+                  }}
+                  onTouchEnd={() => clearTimeout(pressTimer.current)}
+                  onTouchMove={() => clearTimeout(pressTimer.current)}
                 >
                   {chat.title || "Untitled Chat"}
                 </div>
@@ -111,24 +166,21 @@ const Dashboard = () => {
         </div>
 
         <div className="sidebar-bottom">
-          <div className="avatar"><CgProfile /></div>
-          <span className="username">User</span>
+          <div className="avatar">{initial}</div>
+          <span className="username">{userName}</span>
         </div>
       </div>
 
       {/* Chat Area */}
       <div className="chat-area">
-        {/* Messages */}
         <div className="messages">
-          {/* Safety check: Kya current chat exist karti hai aur usme messages hain? */}
-          {!chats?.[currentChatId] ||
-          chats[currentChatId].message.length === 0 ? (
+          {currentMessages.length === 0 && !aiThinking ? (
             <div className="empty-state">
               <h2>What's on the agenda today?</h2>
-              <p>Start a conversation 🚀</p>
+              <p>Start a conversation</p>
             </div>
           ) : (
-            chats[currentChatId].message.map((msg, i) => (
+            currentMessages.map((msg, i) => (
               <div
                 key={i}
                 className={msg.role === "user" ? "message user" : "message ai"}
@@ -137,14 +189,14 @@ const Dashboard = () => {
               </div>
             ))
           )}
-             {isLoading && (
-    <div className="message ai thinking">
-      <em>Thinking...</em>
-    </div>
-  )}
+
+          {aiThinking && (
+            <div className="message ai thinking">
+              <em>Thinking...</em>
+            </div>
+          )}
         </div>
 
-        {/* Input */}
         <div className="chat-input">
           <label className="image-upload">
             📎
@@ -159,10 +211,27 @@ const Dashboard = () => {
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
           />
 
-          {/* Send Icon */}
-          <button onClick={handleSend}>➤</button>
+          <button onClick={handleSend} disabled={aiThinking}>
+            ➤
+          </button>
         </div>
       </div>
+
+      {/* Right-click menu */}
+      {menu && (
+        <div
+          className="context-menu"
+          style={{
+            top: menu.y,
+            left: Math.min(menu.x, window.innerWidth - 160),
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="menu-item danger" onClick={onDelete}>
+            <FiTrash2 /> Delete
+          </div>
+        </div>
+      )}
     </div>
   );
 };

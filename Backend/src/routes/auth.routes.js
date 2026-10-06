@@ -11,4 +11,6 @@ authRouter.get('/get-me',userAuth,getMe)
 
 authRouter.get('/verify-email',verifyEmail)
 
+
+
 export default authRouter

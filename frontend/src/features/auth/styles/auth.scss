@@ -1,70 +1,196 @@
-.auth-container{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#020817;
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap");
+
+// ---------- TOKENS (dashboard jaise hi) ----------
+$bg: #04060c;
+$surface: #0a0f1d;
+$border: #172037;
+$text: #e8ebf3;
+$muted: #7c86a2;
+$sapphire: #2563eb;
+$sapphire-deep: #1e3a8a;
+$sapphire-soft: #60a5fa;
+
+$font-display: "Cormorant Garamond", Georgia, serif;
+$font-body: "Lora", Georgia, serif;
+
+.auth-container {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  box-sizing: border-box;
+  font-family: $font-body;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba($sapphire, 0.18),
+      transparent 55%
+    ),
+    $bg;
 }
 
-.auth-card{
-  width:380px;
-  background:#0f172a;
-  padding:40px;
-  border-radius:12px;
-  border:1px solid #1f2937;
-  text-align:center;
+.auth-card {
+  width: 100%;
+  max-width: 24rem;
+  box-sizing: border-box;
+  background: $surface;
+  padding: 2.5rem 2.25rem;
+  border-radius: 1rem;
+  border: 0.0625rem solid $border;
+  box-shadow: 0 0 3rem rgba($sapphire, 0.12);
+  text-align: center;
+    a {
+    color: $sapphire-soft;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .auth-error {
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.6rem;
+    background: rgba(248, 113, 113, 0.1);
+    border: 0.0625rem solid rgba(248, 113, 113, 0.4);
+    color: #fca5a5;
+    font-size: 0.9rem;
+    text-align: left;
+  }
+
+
+  // logo, JSX badalne ki zaroorat nahi
+  &::before {
+    content: "Perplexity";
+    display: block;
+    font-family: $font-display;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1.7rem;
+    color: $sapphire-soft;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    font-family: $font-display;
+    font-weight: 700;
+    font-size: 2.4rem;
+    line-height: 1.1;
+    color: #fff;
+    margin: 0 0 0.4rem;
+  }
+
+  p {
+    color: $muted;
+    margin: 0 0 1.8rem;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  input {
+    padding: 0.8rem 1rem;
+    border-radius: 0.6rem;
+    border: 0.0625rem solid $border;
+    background: $bg;
+    color: #fff;
+    font-family: $font-body;
+    font-size: 1rem; // 16px, mobile pe zoom nahi hoga
+    outline: none;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+
+    &::placeholder {
+      color: $muted;
+    }
+
+    &:focus {
+      border-color: $sapphire;
+      box-shadow: 0 0 0.9rem rgba($sapphire, 0.3);
+    }
+
+    // browser autofill ka safed/light background hatao
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus {
+      -webkit-text-fill-color: #fff;
+      -webkit-box-shadow: 0 0 0 100px $bg inset;
+      caret-color: #fff;
+      transition: background-color 9999s ease-in-out 0s;
+    }
+  }
+
+  button {
+    margin-top: 0.4rem;
+    padding: 0.85rem;
+    border: none;
+    border-radius: 0.6rem;
+    background: linear-gradient(135deg, $sapphire-deep, $sapphire);
+    color: #fff;
+    font-family: $font-body;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter 0.2s;
+
+    &:hover {
+      filter: brightness(1.15);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    display: block;
+    margin-top: 1.5rem;
+    color: $muted;
+    font-size: 0.95rem;
+  }
+
+  a {
+    color: $sapphire-soft;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
-.auth-card h1{
-  color:white;
-  margin-bottom:5px;
-}
+// ---------- MOBILE ----------
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 1rem;
+  }
 
-.auth-card p{
-  color:#94a3b8;
-  margin-bottom:25px;
-}
+  .auth-card {
+    padding: 2rem 1.4rem;
+     @media (max-width: 480px) {
+  .auth-container {
+    padding: 1rem;
+  }
 
-.auth-card form{
-  display:flex;
-  flex-direction:column;
-  gap:15px;
-}
+  .auth-card {
+    padding: 2rem 1.4rem;
 
-.auth-card input{
-  padding:12px;
-  border-radius:8px;
-  border:1px solid #1d4ed8;
-  background:#020817;
-  color:white;
-  outline:none;
-}
+    h1 {
+      font-size: 2rem;
+    }
+  }
 
-.auth-card input:focus{
-  border-color:#1d4ed8;
-}
+  }
 
-.auth-card button{
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:#1d4ed8;
-  color:white;
-  font-weight:600;
-  cursor:pointer;
-}
-
-.auth-card button:hover{
-  background:#1d4ed8;
-}
-
-.auth-card span{
-  display:block;
-  margin-top:20px;
-  color:#94a3b8;
-}
-
-.auth-card a{
-  color:#1d4ed8;
-  text-decoration:none;
+    h1 {
+      font-size: 2rem;
+    }
+  }
 }

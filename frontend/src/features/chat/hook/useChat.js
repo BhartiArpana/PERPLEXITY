@@ -71,12 +71,19 @@ export const useChat = ()=>{
       dispatch(setCurrentChatId(chatId))
     }
 
+    async function handleDeleteChat(chatId){
+      const data = await deleteChat(chatId)
+      return data
+      
+    }
+
     
 
     return {
         initializeSocketConnection,
         handleSendMessage,
         handleGetChats,
-        handleOpenChat
+        handleOpenChat,
+        handleDeleteChat
     }
 }
