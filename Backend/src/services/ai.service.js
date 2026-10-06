@@ -5,8 +5,9 @@ import {searchInternet} from './internet.services.js'
 
 
 const model = new ChatMistralAI({
-model: "mistral-small-latest",
-apiKey:process.env.MISTRAL_API_KEY
+model: "ministral-8b-2512",
+apiKey:process.env.MISTRAL_API_KEY,
+maxRetries: 1
 });
 
 const searchInternetTool = tool(
