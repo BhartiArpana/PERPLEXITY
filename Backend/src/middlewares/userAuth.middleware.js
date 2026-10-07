@@ -7,6 +7,7 @@ export async function userAuth(req,res,next){
         : null
 
     const token = headerToken || req.cookies?.token
+    // console.log("auth header:", req.headers.authorization)
     if(!token){
         return res.status(401).json({
             message:'unauthorized',
