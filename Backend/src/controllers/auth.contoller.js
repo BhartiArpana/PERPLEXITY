@@ -103,12 +103,14 @@ export async function login(req, res) {
       name: user.name,
     },
     process.env.JWT_SECRET,
+    { expiresIn: "7d" },
   );
 
   res.cookie("token", token, {
     httpOnly: true,
     secure: isProd,
     sameSite: isProd ? "none" : "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
   res.status(200).json({
     message: "user login successfully",
